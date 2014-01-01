@@ -21,7 +21,8 @@ def get_last_modified_time(url):
     for line in str(req.info()).split('\n'):
         if 'last-modified' in line.lower():
             last_modified = line.split(': ')[1].strip()
-            last_modified = time.strptime(last_modified.replace(' GMT', ''), '%a, %d %b %Y %H:%M:%S')
+            last_modified = time.strptime(last_modified.replace(' GMT', ''),
+                                          '%a, %d %b %Y %H:%M:%S')
             break
 
     if not last_modified:
