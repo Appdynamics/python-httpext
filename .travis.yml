@@ -4,4 +4,4 @@ python:
     - 2.7
 install:
     - pip install --upgrade osextension sh
-script: python -m unittest test
+script: python test.py

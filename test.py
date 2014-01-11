@@ -24,7 +24,7 @@ class TestDownloadFunctions(unittest.TestCase):
         with open(local_file) as f:
             line = f.readline().strip()
             self.assertEqual(line, '<!doctype html>')
-            self.assertIn('This domain is established to be used for illustrative examples in documents.', ' '.join(f.readlines()))
+            self.assertTrue('This domain is established to be used for illustrative examples in documents.' in ' '.join(f.readlines()))
 
     def test_cached_response(self):
         local_file = tempfile.mkstemp(prefix='_test-httpext_')[1]
@@ -54,7 +54,11 @@ class TestDownloadFunctions(unittest.TestCase):
             self.assertEqual('Not HTML', first_line)
             self.assertEqual('<!doctype html>', f.readline().strip())
 
-    def doCleanups(self):
+    def tearDown(self):
         for file in self._temp_files:
             if fs.isfile(file):
                 os.remove(file)
+
+# This is used to keep compatibility with 2.6
+if __name__ == '__main__':
+    unittest.main()
