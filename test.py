@@ -1,6 +1,5 @@
 from os.path import getmtime, join as path_join
 from osext import filesystem as fs
-from sh import which
 import calendar
 import httpext
 import os
