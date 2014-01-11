@@ -12,9 +12,6 @@ class TestDownloadFunctions(unittest.TestCase):
 
     _temp_files = []
 
-    def setUp(self):
-        pass
-
     def test_normal_use(self):
         local_file = tempfile.mkstemp(prefix='_test-httpext_')[1]
         self._temp_files.append(local_file)
