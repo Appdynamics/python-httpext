@@ -3,5 +3,5 @@ python:
     - 2.6
     - 2.7
 install:
-    - pip install --upgrade osext
+    - pip install --upgrade osextension
 script: python -m unittest test
