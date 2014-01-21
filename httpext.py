@@ -3,7 +3,10 @@
 from os import utime as setfiletime
 from os.path import join as path_join, isdir, basename, dirname
 from shutil import copy2 as copy_file
-from urllib2 import urlopen
+try:
+    from urllib2 import urlopen
+except ImportError:
+    from urllib.request import urlopen
 import calendar
 import datetime
 import os
