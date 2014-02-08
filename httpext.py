@@ -6,17 +6,21 @@ from shutil import copy2 as copy_file
 try:
     from urllib2 import urlopen
 except ImportError:
-    from urllib.request import urlopen
+    from urllib.request import urlopen, Request
 import calendar
 import datetime
 import os
+import re
 import time
 
 import osext.filesystem as fs
 
 
-def get_last_modified_time(url):
+def get_last_modified_time(url, headers=None):
 # TODO Handle timezones correctly
+    if headers:
+        url = Request(url, None, headers)
+
     req = urlopen(url)
     req.get_method = lambda: 'HEAD'
     last_modified = None
@@ -34,16 +38,17 @@ def get_last_modified_time(url):
     return last_modified
 
 
-def dl(url, local_file, cache=True):
-    last_modified = get_last_modified_time(url)
+def dl(url, local_file, cache=True, headers=None):
+    last_modified = get_last_modified_time(url, headers=headers)
     filetime = None
 
     if last_modified:
         filetime = calendar.timegm(last_modified)
 
     cache_dir = path_join(os.environ['HOME'], '.cache', 'httpext')
-    basename_fn = basename(local_file)
-    cached_file = path_join(cache_dir, basename(basename_fn))
+    cut = len(dirname(url)) + 1
+    cached_fn = '%05d%s' % (cut, re.sub('^https?\://', '', url).replace('/', '2'))
+    cached_file = path_join(cache_dir, cached_fn)
 
     if cache:
         if not isdir(cache_dir):
@@ -51,9 +56,13 @@ def dl(url, local_file, cache=True):
 
         if fs.isfile(cached_file) and \
                 fs.has_same_time(cached_file, filetime):
-            copy_file(cached_file, path_join(dirname(local_file), basename_fn))
+            original_fn = cached_fn[int(cached_fn[0:5]) - 2:]
+            copy_file(cached_file, path_join(dirname(local_file), original_fn))
 
             return
+
+    if headers:
+        url = Request(url, None, headers)
 
     req = urlopen(url)
 
