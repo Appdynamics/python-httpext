@@ -9,6 +9,7 @@ except ImportError:
     from urllib.request import urlopen, Request
 import calendar
 import datetime
+import logging
 import os
 import re
 import time
@@ -39,6 +40,7 @@ def get_last_modified_time(url, headers=None):
 
 
 def dl(url, local_file, cache=True, headers=None):
+    logger = logging.getLogger('httpext')
     last_modified = get_last_modified_time(url, headers=headers)
     filetime = None
 
@@ -51,13 +53,16 @@ def dl(url, local_file, cache=True, headers=None):
     cached_file = path_join(cache_dir, cached_fn)
 
     if cache:
+        logger.debug('cache = True')
+
         if not isdir(cache_dir):
+            logger.debug('Creating cache directory %s' % (cache_dir))
             os.makedirs(cache_dir)
 
         if fs.isfile(cached_file) and \
                 fs.has_same_time(cached_file, filetime):
-            original_fn = cached_fn[int(cached_fn[0:5]) - 2:]
-            copy_file(cached_file, path_join(dirname(local_file), original_fn))
+            logger.debug('Has cached file %s and file has same time' % (cached_file))
+            copy_file(cached_file, path_join(dirname(local_file), local_file))
 
             return
 
