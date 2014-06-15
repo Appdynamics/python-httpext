@@ -10,4 +10,7 @@ setup(
     license='LICENSE.txt',
     description='Helpers for downloading files.',
     long_description=open('README.rst').read(),
+    install_requires=[
+        'OSExtension>=0.1.2',
+    ]
 )
