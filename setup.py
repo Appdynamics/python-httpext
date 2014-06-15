@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='HttpExt',
-    version='0.1.3',
+    version='0.1.4',
     author='Andrew Udvare',
     author_email='audvare@gmail.com',
     py_modules=['httpext'],
